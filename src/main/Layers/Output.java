@@ -1,8 +1,10 @@
+import org.nd4j.linalg.activations.impl.ActivationSoftmax;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.scalar.RectifiedLinear;
+import org.nd4j.linalg.api.ops.impl.transforms.custom.SoftMax;
 import org.nd4j.linalg.factory.Nd4j;
 
-public class Dense {
+public class Output {
 
     int Neurons;
     long TotalImages;
@@ -12,7 +14,7 @@ public class Dense {
     long []WeightShape;
     INDArray Z;
 
-    Dense(long []InputShape, int Neurons, double Lrate){
+    Output(long []InputShape, int Neurons, double Lrate){
         this.Neurons = Neurons;
         this.TotalImages = InputShape[0];
         this.Lrate = Lrate;
@@ -22,16 +24,16 @@ public class Dense {
     }
 
     INDArray forward(INDArray Input){
-        System.out.println("[DENSE FORWARD PASS]");
+        System.out.println("[OUTPUT DENSE FORWARD PASS]");
         this.Z = Input.mmul(this.Weights).add(this.Bias);
 
         // Return Activation
-        return Nd4j.getExecutioner().exec(new RectifiedLinear(this.Z));
+        ActivationSoftmax softmax = new ActivationSoftmax();
+        return softmax.getActivation(this.Z.dup(),true);
     }
 
-    INDArray backward(INDArray Input, INDArray Weights, INDArray dL){
-        ReLU rectifiedLU = new ReLU();
-        INDArray dZ = dL.mmul(Weights.transpose()).mul(rectifiedLU.D_relu(this.Z));
+    INDArray backward(INDArray Input, INDArray Activations, INDArray ExpectedOutput){
+        INDArray dZ = ExpectedOutput.sub(Activations);
 
         // Calculate Gradient for Weight and Bias
         INDArray dWeights = Input.transpose().mmul(dZ).div(this.TotalImages);
