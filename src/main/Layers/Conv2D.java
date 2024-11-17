@@ -61,6 +61,7 @@ public class Conv2D {
         INDArray Output = Nd4j.create(OutputShape);
 
         // Compute the Convolution
+        System.out.println("[CONVOLUTION FORWARD PASS]");
         for(int b=0;b<InputShape[0];b++){
             for(int i=0;i<OutputShape[1];i++){
                 for(int j=0;j<OutputShape[2];j++){
@@ -81,6 +82,7 @@ public class Conv2D {
                     }
                 }
             }
+            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
         }
 
         // Return Convolution Output

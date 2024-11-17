@@ -6,11 +6,11 @@ import java.util.Arrays;
 
 public class MaxPool2D {
 
-    int[] WindowShape;
+    long[] WindowShape;
     double Lrate;
     int Strides;
 
-    MaxPool2D(int []Shape,double Lrate,int Strides){
+    MaxPool2D(long[] Shape, double Lrate, int Strides){
         this.WindowShape = Shape.clone();
         this.Lrate = Lrate;
         this.Strides = Strides;
@@ -28,6 +28,7 @@ public class MaxPool2D {
         INDArray Output = Nd4j.create(OutputShape);
 
         // Compute the MaxPooling
+        System.out.println("[MAXIMUM POOLING FORWARD PASS]");
         for(int b=0;b<InputShape[0];b++){
             for(int i=0;i<OutputShape[1];i++){
                 for(int j=0;j<OutputShape[2];j++){
@@ -42,6 +43,7 @@ public class MaxPool2D {
                     }
                 }
             }
+            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
         }
 
         // Return Maximum Pooled Output
