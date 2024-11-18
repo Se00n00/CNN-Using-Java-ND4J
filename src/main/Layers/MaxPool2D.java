@@ -4,7 +4,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.Arrays;
 
-public class MaxPool2D {
+public class MaxPool2D extends Layers{
 
     long[] WindowShape;
     double Lrate;

@@ -4,7 +4,7 @@ import org.nd4j.linalg.api.ops.impl.scalar.RectifiedLinear;
 import org.nd4j.linalg.api.ops.impl.transforms.custom.SoftMax;
 import org.nd4j.linalg.factory.Nd4j;
 
-public class Output {
+public class Output extends Layers{
 
     int Neurons;
     long TotalImages;
@@ -14,8 +14,8 @@ public class Output {
     long []WeightShape;
     INDArray Z;
 
-    Output(long []InputShape, int Neurons, double Lrate){
-        this.Neurons = Neurons;
+    Output(long []InputShape, int numClasses, double Lrate){
+        this.Neurons = numClasses;
         this.TotalImages = InputShape[0];
         this.Lrate = Lrate;
         this.Bias =  Nd4j.rand(1,Neurons);

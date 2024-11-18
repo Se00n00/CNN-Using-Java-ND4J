@@ -4,7 +4,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.Arrays;
 
-public class Conv2D {
+public class Conv2D extends Layers{
 
     INDArray Bias;
     INDArray Weights;

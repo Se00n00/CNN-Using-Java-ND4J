@@ -4,7 +4,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.Arrays;
 
-public class AvgPool2D {
+public class AvgPool2D extends Layers{
 
     long[] WindowShape;
     double Lrate;

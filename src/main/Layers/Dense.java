@@ -2,7 +2,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.scalar.RectifiedLinear;
 import org.nd4j.linalg.factory.Nd4j;
 
-public class Dense {
+public class Dense extends Layers{
 
     int Neurons;
     long TotalImages;
