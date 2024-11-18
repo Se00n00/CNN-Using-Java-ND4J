@@ -32,8 +32,10 @@ public class Output {
         return softmax.getActivation(this.Z.dup(),true);
     }
 
-    INDArray backward(INDArray Input, INDArray Activations, INDArray ExpectedOutput){
-        INDArray dZ = ExpectedOutput.sub(Activations);
+    INDArray backward(INDArray Input, INDArray Activations, INDArray TrueLabels){
+
+//        TODO : TrueLabels - Activations ? or Activations - TrueLabels
+        INDArray dZ = TrueLabels.sub(Activations);
 
         // Calculate Gradient for Weight and Bias
         INDArray dWeights = Input.transpose().mmul(dZ).div(this.TotalImages);

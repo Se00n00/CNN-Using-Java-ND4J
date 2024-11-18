@@ -20,6 +20,11 @@
             <artifactId>nd4j-api</artifactId>
             <version>1.0.0-M2</version>
         </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>dl4j-spark_2.12</artifactId>
+            <version>1.0.0-M2.1</version>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.nd4j</groupId>-->
 <!--            <artifactId>nd4j-cuda-11.4</artifactId>-->
