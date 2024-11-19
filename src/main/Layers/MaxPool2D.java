@@ -16,6 +16,7 @@ public class MaxPool2D extends Layers{
         this.Strides = Strides;
     }
 
+    @Override
     INDArray forward(INDArray Input){
         long []InputShape = Arrays.stream(Input.shape()).toArray();
 
@@ -43,10 +44,15 @@ public class MaxPool2D extends Layers{
                     }
                 }
             }
-            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
+//            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
         }
 
         // Return Maximum Pooled Output
         return Output;
+    }
+
+    @Override
+    INDArray backward(INDArray Input) {
+        return null;
     }
 }

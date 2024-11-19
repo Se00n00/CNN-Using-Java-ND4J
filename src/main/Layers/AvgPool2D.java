@@ -16,6 +16,7 @@ public class AvgPool2D extends Layers{
         this.Strides = Strides;
     }
 
+    @Override
     INDArray forward(INDArray Input){
         long []InputShape = Arrays.stream(Input.shape()).toArray();
 
@@ -49,4 +50,10 @@ public class AvgPool2D extends Layers{
         // Return Average Pooled Output
         return Output;
     }
+
+    INDArray backward(INDArray Input) {
+        return null;
+    }
+
+
 }

@@ -8,31 +8,40 @@ public class Conv2D extends Layers{
 
     INDArray Bias;
     INDArray Weights;
+    long[] ConvolutionShape;
     long[] WeightsShape;
     double Lrate;
     long Padding;
     long Strides;
     int Neurons;
 
-    Conv2D(int Neurons,long[] shape,double Lrate,long Padding,long Strides){
-        this.Bias = Nd4j.rand(Neurons);
+    Conv2D(int Neurons,long[] ConvolutionShape,double Lrate,long Padding,long Strides){
         this.Neurons = Neurons;
-//        TODO: Xavier Intiallization
-//        this.Weights = Nd4j.rand(shape);
-        this.WeightsShape = new long[]{shape[0],shape[1],shape[2],Neurons};
-        this.Weights = Nd4j.rand(WeightsShape);
-//        this.WeightsShape = Arrays.stream(this.Weights.shape()).toArray().clone();
+        this.ConvolutionShape = ConvolutionShape.clone();
         this.Lrate = Lrate;
         this.Padding = Padding;
         this.Strides = Strides;
     }
-    INDArray forward(INDArray Input){
 
+    @Override
+    INDArray forward(INDArray Input){
         long[] InputShape = Arrays.stream(Input.shape()).toArray();
 
-        // Check If Channel Matches:
+        // Initiallize Parameter if Isn't Intitallized
+        if(this.Bias == null)
+            this.Bias = Nd4j.create(this.Neurons);
+        if(this.WeightsShape == null)
+            this.WeightsShape = new long[]{this.ConvolutionShape[0],this.ConvolutionShape[1],InputShape[3],this.Neurons};
+
+//        TODO: Xavier Intiallization
+        if(this.Weights == null)
+            this.Weights = Nd4j.rand(this.WeightsShape);
+
+
+        // Check If Shape Is Correct
         if(InputShape.length != this.WeightsShape.length){
             System.out.println("Convolutional Forward Pass :: Input's Dimension "+InputShape.length+" Doesn't Matches to Kernel's Dimension "+ this.WeightsShape.length);
+            System.out.println("");
             return null;
         }
         if(InputShape[3] != this.WeightsShape[2]){
@@ -82,14 +91,19 @@ public class Conv2D extends Layers{
                     }
                 }
             }
-            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
+//            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
+//            System.out.print("\r");
         }
 
-        // Return Convolution Output
-        return Output;
+        // Apply Relu & Return Convolution Output
+        ReLU R = new ReLU();
+        return R.relu(Output);
     }
+
+    INDArray backward(INDArray Input) {
+        return null;
+    }
+
     public INDArray getBias(){return this.Bias;}
-    public INDArray getWeights(){
-        return this.Weights;
-    }
+    public INDArray getWeights(){return this.Weights;}
 }

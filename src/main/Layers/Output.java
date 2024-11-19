@@ -1,10 +1,12 @@
 import org.nd4j.linalg.activations.impl.ActivationSoftmax;
+import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.scalar.RectifiedLinear;
-import org.nd4j.linalg.api.ops.impl.transforms.custom.SoftMax;
 import org.nd4j.linalg.factory.Nd4j;
+import org.opencv.dnn.Layer;
 
-public class Output extends Layers{
+import java.util.Arrays;
+
+public class Output extends Layers {
 
     int Neurons;
     long TotalImages;
@@ -12,33 +14,44 @@ public class Output extends Layers{
     INDArray Bias;
     INDArray Weights;
     long []WeightShape;
-    INDArray Z;
+    INDArray OutputResult;
 
-    Output(long []InputShape, int numClasses, double Lrate){
+
+    Output(int numClasses, double Lrate){
         this.Neurons = numClasses;
-        this.TotalImages = InputShape[0];
         this.Lrate = Lrate;
-        this.Bias =  Nd4j.rand(1,Neurons);
-        this.WeightShape = new long[]{InputShape[1], (long) Neurons};
-        this.Weights = Nd4j.rand(this.WeightShape);
     }
 
+    @Override
     INDArray forward(INDArray Input){
+        long[] InputShape = Arrays.stream(Input.shape()).toArray();
+
+        // Initialize Parameters
+        this.TotalImages = InputShape[0];
+//        TODO :: [1,Neurons] || [Neurons]
+        if(this.Bias == null)
+            this.Bias = Nd4j.rand(1,this.Neurons);
+        if(this.WeightShape == null)
+            this.WeightShape = new long[]{InputShape[1], (long) Neurons};
+        if(this.Weights == null)
+            this.Weights = Nd4j.rand(this.WeightShape);
+
         System.out.println("[OUTPUT DENSE FORWARD PASS]");
-        this.Z = Input.mmul(this.Weights).add(this.Bias);
 
         // Return Activation
         ActivationSoftmax softmax = new ActivationSoftmax();
-        return softmax.getActivation(this.Z.dup(),true);
+        this.OutputResult = softmax.getActivation(Input.mmul(this.Weights).add(this.Bias),true);
+        return OutputResult;
     }
 
-    INDArray backward(INDArray Input, INDArray Activations, INDArray TrueLabels){
-
+    INDArray backward(INDArray Activations, INDArray TrueLabels){
+        System.out.println("[OUTPUT DENSE BACKWARD PASS]");
 //        TODO : TrueLabels - Activations ? or Activations - TrueLabels
-        INDArray dZ = TrueLabels.sub(Activations);
+        TrueLabels = TrueLabels.castTo(DataType.FLOAT);
+        INDArray dZ = TrueLabels.sub(this.OutputResult);
 
         // Calculate Gradient for Weight and Bias
-        INDArray dWeights = Input.transpose().mmul(dZ).div(this.TotalImages);
+        INDArray dWeights = Activations.transpose().mmul(dZ).div(this.TotalImages);
         INDArray dBiases = dZ.sum(0).div(this.TotalImages);
 
         // Update Weights and Biases
@@ -48,4 +61,5 @@ public class Output extends Layers{
         return dZ;
     }
 
+    public INDArray getWeights() {return Weights;}
 }
