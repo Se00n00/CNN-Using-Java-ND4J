@@ -29,11 +29,12 @@ public class MaxPool2D extends Layers{
         INDArray Output = Nd4j.create(OutputShape);
 
         // Compute the MaxPooling
-        System.out.println("[MAXIMUM POOLING FORWARD PASS]");
+        System.out.println("[MAXIMUM POOLING FORWARD PASS]"+Arrays.toString(Input.shape()));
         for(int b=0;b<InputShape[0];b++){
             for(int i=0;i<OutputShape[1];i++){
                 for(int j=0;j<OutputShape[2];j++){
                     for(int k=0;k<OutputShape[3];k++){
+
                         INDArray InputPatch = Input.get(
                                 NDArrayIndex.point(b),
                                 NDArrayIndex.interval(i*this.Strides,i*this.Strides+this.WindowShape[0]),
@@ -53,6 +54,7 @@ public class MaxPool2D extends Layers{
 
     @Override
     INDArray backward(INDArray Input) {
+
         return null;
     }
 }

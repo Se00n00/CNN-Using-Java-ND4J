@@ -1,3 +1,4 @@
+import org.apache.spark.sql.sources.In;
 import org.nd4j.linalg.activations.impl.ActivationSoftmax;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -33,10 +34,12 @@ public class Output extends Layers {
             this.Bias = Nd4j.rand(1,this.Neurons);
         if(this.WeightShape == null)
             this.WeightShape = new long[]{InputShape[1], (long) Neurons};
-        if(this.Weights == null)
-            this.Weights = Nd4j.rand(this.WeightShape);
+        if(this.Weights == null){
+            double limit = Math.sqrt(6.0/Input.size(1) + this.Neurons);
+            this.Weights = Nd4j.rand(this.WeightShape).muli(2*limit).subi(limit);
+        }
 
-        System.out.println("[OUTPUT DENSE FORWARD PASS]");
+        System.out.println("[OUTPUT DENSE FORWARD PASS]"+Arrays.toString(Input.shape()));
 
         // Return Activation
         ActivationSoftmax softmax = new ActivationSoftmax();
@@ -45,7 +48,8 @@ public class Output extends Layers {
     }
 
     INDArray backward(INDArray Activations, INDArray TrueLabels){
-        System.out.println("[OUTPUT DENSE BACKWARD PASS]");
+        System.out.println("[OUTPUT DENSE BACKWARD PASS]"+Arrays.toString(TrueLabels.shape()));
+//        System.out.println(Arrays.toString(Activations.shape()));
 //        TODO : TrueLabels - Activations ? or Activations - TrueLabels
         TrueLabels = TrueLabels.castTo(DataType.FLOAT);
         INDArray dZ = TrueLabels.sub(this.OutputResult);

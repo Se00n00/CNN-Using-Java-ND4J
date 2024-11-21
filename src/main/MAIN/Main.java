@@ -1,4 +1,5 @@
 import org.datavec.image.loader.NativeImageLoader;
+import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
@@ -111,10 +112,10 @@ public class Main {
 
 
         // Define Model :: CURRENT : AlexNet
-        long[] Convolution1 = new long[]{11,11};
-        Conv2D C1 = new Conv2D(96,Convolution1,0.01,0,3);
+        long[] Convolution1 = new long[]{7,7};
+        Conv2D C1 = new Conv2D(10,Convolution1,0.01,0,4);
 
-        long[] Pooling1 = new long[]{3,3};
+        long[] Pooling1 = new long[]{2,2};
         MaxPool2D P1 = new MaxPool2D(Pooling1,0.01,1);
 
         long[] Convolution2 = new long[]{5,5};
@@ -137,20 +138,40 @@ public class Main {
 
         Flatten F = new Flatten();
 
-        Dense D1 = new Dense(20, 0.3);
-        Output D2 = new Output(10, 0.03);
+        Dense D1 = new Dense(128, 0.3, "RELU");
+        Dense D2 = new Dense(10, 0.03, "SOFTMAX");
 
         for(int e = 0;e<5;e++){
 
             System.out.println("[EPOCH]--------------------------------------------------"+"["+(e+1)+"]");
             // Forward
-            INDArray ConvolutionLayer = F.forward(P1.forward(C1.forward(Train_X)));
-            INDArray Dense1Layer = D1.forward(ConvolutionLayer);
-            INDArray Dense2Layer = D2.forward(Dense1Layer);
+            INDArray ConvolutionLayer = P1.forward(C1.forward(Train_X));
+            System.out.println(Arrays.toString(ConvolutionLayer.shape()));
 
-//            System.out.println(Arrays.toString(Dense2Layer.shape()));
+            INDArray Flattened = F.forward(ConvolutionLayer);
+            System.out.println(Arrays.toString(Flattened.shape()));
+
+            INDArray Dense1Layer = D1.forward(Flattened);
+            System.out.println(Arrays.toString(Dense1Layer.shape()));
+
+            INDArray Dense2Layer = D2.forward(Dense1Layer);
+            System.out.println(Arrays.toString(Dense2Layer.shape()));
+
+//            TODO : Change the Loss to Cross Entropy
+            // MSE LOSS
+            INDArray dL_dO = Train_Y.castTo(DataType.FLOAT).sub(Dense2Layer);
+
             // Backward
-            D1.backward(ConvolutionLayer,D2.getWeights(),D2.backward(Dense1Layer,Train_Y));
+            INDArray Dense2LayerBackward = D2.backward(dL_dO,Dense1Layer);
+            System.out.println(Arrays.toString(Dense2LayerBackward.shape()));
+
+            INDArray Dense1LayerBackend = D1.backward(Dense2LayerBackward,Flattened);
+            System.out.println(Arrays.toString(Dense1LayerBackend.shape()));
+
+
+            INDArray Backward = F.backward(Dense1LayerBackend);
+//            D1.backward(Flattened,D2.getWeights(),D2.backward(Dense1Layer,Train_Y));
+            System.out.println(Arrays.toString(Backward.shape()));
 
             // Evaluate Output
             System.out.println(Evaluation.Accuracy(Dense2Layer,Train_Y));

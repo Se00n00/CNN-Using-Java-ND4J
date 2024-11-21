@@ -29,7 +29,7 @@ public class Conv2D extends Layers{
 
         // Initiallize Parameter if Isn't Intitallized
         if(this.Bias == null)
-            this.Bias = Nd4j.create(this.Neurons);
+            this.Bias = Nd4j.rand(this.Neurons);
         if(this.WeightsShape == null)
             this.WeightsShape = new long[]{this.ConvolutionShape[0],this.ConvolutionShape[1],InputShape[3],this.Neurons};
 
@@ -67,16 +67,17 @@ public class Conv2D extends Layers{
         long[] OutputShape = {InputShape[0], kernal_i, kernal_j, this.Neurons};
 
         // Create Output Index-N-Dim Array
-        INDArray Output = Nd4j.create(OutputShape);
+        INDArray Output = Nd4j.zeros(OutputShape);
 
         // Compute the Convolution
-        System.out.println("[CONVOLUTION FORWARD PASS]");
+        System.out.println("[CONVOLUTION FORWARD PASS]"+Arrays.toString(Input.shape()));
         for(int b=0;b<InputShape[0];b++){
             for(int i=0;i<OutputShape[1];i++){
                 for(int j=0;j<OutputShape[2];j++){
                     for(int k=0;k<this.Neurons;k++){
 
-                        INDArray InputPatch = Input.get(NDArrayIndex.point(b),
+                        INDArray InputPatch = Input.get(
+                                NDArrayIndex.point(b),
                                 NDArrayIndex.interval(i*this.Strides,i*this.Strides+WeightsShape[0]),
                                 NDArrayIndex.interval(j*this.Strides,j*this.Strides+WeightsShape[1]),
                                 NDArrayIndex.all()
@@ -91,12 +92,10 @@ public class Conv2D extends Layers{
                     }
                 }
             }
-//            System.out.println("[BATCH---------------------------------------------]"+"["+(b+1)+"/"+InputShape[0]+"]");
-//            System.out.print("\r");
         }
 
         // Apply Relu & Return Convolution Output
-        ReLU R = new ReLU();
+        ReluActivation R = new ReluActivation();
         return R.relu(Output);
     }
 
