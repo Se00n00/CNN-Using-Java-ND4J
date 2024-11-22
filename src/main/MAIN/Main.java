@@ -1,3 +1,5 @@
+import org.apache.hadoop.shaded.org.checkerframework.checker.units.qual.C;
+import org.apache.spark.sql.catalyst.expressions.Conv;
 import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -145,10 +147,13 @@ public class Main {
 
             System.out.println("[EPOCH]--------------------------------------------------"+"["+(e+1)+"]");
             // Forward
-            INDArray ConvolutionLayer = P1.forward(C1.forward(Train_X));
-            System.out.println(Arrays.toString(ConvolutionLayer.shape()));
+            INDArray Convolutional = C1.forward(Train_X);
+            System.out.println(Arrays.toString(Convolutional.shape()));
 
-            INDArray Flattened = F.forward(ConvolutionLayer);
+            INDArray Pooling = P1.forward(Convolutional);
+            System.out.println(Arrays.toString(Pooling.shape()));
+
+            INDArray Flattened = F.forward(Pooling);
             System.out.println(Arrays.toString(Flattened.shape()));
 
             INDArray Dense1Layer = D1.forward(Flattened);
@@ -170,9 +175,10 @@ public class Main {
 
 
             INDArray Backward = F.backward(Dense1LayerBackend);
-//            D1.backward(Flattened,D2.getWeights(),D2.backward(Dense1Layer,Train_Y));
             System.out.println(Arrays.toString(Backward.shape()));
 
+            INDArray MaxBackward = P1.backward(Backward,Convolutional);
+            System.out.println(Arrays.toString(MaxBackward.shape()));
             // Evaluate Output
             System.out.println(Evaluation.Accuracy(Dense2Layer,Train_Y));
         }

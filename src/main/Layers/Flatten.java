@@ -17,7 +17,6 @@ public class Flatten extends Layers{
 
     @Override
     INDArray backward(INDArray Input) {
-        System.out.println("[FLATTEN MIGHT NOT WORK :: FLATTEN BACKPROPAGATION]");
         return Input.reshape(this.Dense2ConvShape);
     }
 }

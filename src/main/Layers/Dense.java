@@ -58,8 +58,6 @@ public class Dense extends Layers{
 
     INDArray backward(INDArray dL, INDArray InputActivations){
         System.out.println("[DENSE BACKWARD PASS]"+Arrays.toString(dL.shape()));
-
-        System.out.println(Arrays.toString(InputActivations.shape())+Arrays.toString(Weights.shape()));
         ReluActivation rectifiedLU = new ReluActivation();
 
         INDArray dZ = null;
