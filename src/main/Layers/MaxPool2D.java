@@ -56,20 +56,28 @@ public class MaxPool2D extends Layers{
     INDArray backward(INDArray Input, INDArray dZ) {
 
         System.out.println("[MAXIMUM POOLING BACKWARD PASS]"+Arrays.toString(dZ.shape()));
+
         long[] inputShape = Input.shape();
         INDArray dP = Nd4j.zeros(inputShape);
         for (int b = 0; b < inputShape[0]; b++) {
-            for (int h = 0; h < inputShape[1] - this.WindowShape[0]/this.Strides; h++) {
-                for (int w = 0; w < inputShape[2] - this.WindowShape[1]/this.Strides; w++) {
+            for (int h = 0; h < inputShape[1] - this.WindowShape[0]/this.Strides + 1; h++) {
+                for (int w = 0; w < inputShape[2] - this.WindowShape[1]/this.Strides + 1; w++) {
                     for (int c = 0; c < inputShape[3]; c++) {
 
-                        // Extract pooling window
+                        int hStart = h * this.Strides;
+                        int wStart = w * this.Strides;
+
+// Check bounds for window extraction
+                        int hEnd = (int) Math.min(hStart + this.WindowShape[0], inputShape[1]);
+                        int wEnd = (int) Math.min(wStart + this.WindowShape[1], inputShape[2]);
+
                         INDArray window = Input.get(
                                 NDArrayIndex.point(b),
-                                NDArrayIndex.interval((long) h *this.Strides, (long) h *this.Strides+this.WindowShape[0]),
-                                NDArrayIndex.interval((long) w *this.Strides, (long) w *this.Strides+this.WindowShape[1]),
+                                NDArrayIndex.interval(hStart, hEnd),
+                                NDArrayIndex.interval(wStart, wEnd),
                                 NDArrayIndex.all()
                         );
+
 
                         int[] maxIndex = Nd4j.argMax(window.reshape(1, -1), 1).toIntVector(); // Convert to 1D index
                         int maxH = maxIndex[0] / (int) this.WindowShape[0]; // Row index in window
@@ -77,12 +85,17 @@ public class MaxPool2D extends Layers{
 
                         // Assign gradient to corresponding input index
                         double gradient = dZ.getDouble(b, h , w , c);
-                        dP.putScalar(new int[]{b, h*this.Strides + maxH, w*this.Strides + maxW, c}, gradient);
+                        // Ensure the indices are within the bounds of the input array
+                        int hIndex = (int) Math.min(h * this.Strides + maxH, inputShape[1] - 1);
+                        int wIndex = (int) Math.min(w * this.Strides + maxW, inputShape[2] - 1);
+
+                        dP.putScalar(new int[]{b, hIndex, wIndex, c}, gradient);
+
+//                        dP.putScalar(new int[]{b, h*this.Strides + maxH, w*this.Strides + maxW, c}, gradient);
                     }
                 }
             }
         }
-        System.out.println("[CHECK MAX POOLING COMPLETED]"+Arrays.toString(dP.shape()));
         return dP;
     }
 

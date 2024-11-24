@@ -34,8 +34,16 @@ public class Conv2D extends Layers{
             this.WeightsShape = new long[]{this.ConvolutionShape[0],this.ConvolutionShape[1],InputShape[3],this.Neurons};
 
 //        TODO: Xavier Intiallization
-        if(this.Weights == null)
-            this.Weights = Nd4j.rand(this.WeightsShape);
+        if(this.Weights == null){
+
+            // He Initiallization
+            double stddev = Math.sqrt(2.0 / (this.WeightsShape[0] * this.WeightsShape[1] * this.WeightsShape[2]));
+            this.Weights = Nd4j.randn(this.WeightsShape).mul(stddev); // He Initialization
+
+            // Xavier Initiallization
+//            double limit = Math.sqrt(6.0/Input.size(1) + this.Neurons);
+//            this.Weights = Nd4j.rand(this.WeightsShape).muli(2*limit).subi(limit);
+        }
 
 
         // Check If Shape Is Correct
@@ -95,13 +103,89 @@ public class Conv2D extends Layers{
         }
 
         // Apply Relu & Return Convolution Output
-        ReluActivation R = new ReluActivation();
-        return R.relu(Output);
+        return ReluActivation.relu(Output);
     }
 
-    INDArray backward(INDArray Input) {
-        return null;
+    INDArray backward(INDArray Input, INDArray dZ) {
+        System.out.println("[CONVOLUTIONAL BACKWARD PASS]" + Arrays.toString(dZ.shape()));
+
+        long[] inputShape = Input.shape();
+        long[] dZShape = dZ.shape();
+
+        int batchSize = (int) inputShape[0];
+        int inputHeight = (int) inputShape[1];
+        int inputWidth = (int) inputShape[2];
+        int inChannels = (int) inputShape[3];
+        int dZHeight = (int) dZShape[1];
+        int dZWidth = (int) dZShape[2];
+        int outChannels = (int) dZShape[3];
+        int filterHeight = (int) this.WeightsShape[0];
+        int filterWidth = (int) this.WeightsShape[1];
+
+        // Pad the input
+        INDArray paddedInput = Nd4j.pad(Input, new int[][]{
+                {0, 0},                                     // Batch dimension
+                {(int) this.Padding, (int) this.Padding},   // Height padding
+                {(int) this.Padding, (int) this.Padding},   // Width padding
+                {0, 0}                                      // Channel dimension
+        });
+
+        // Initialize gradients
+        INDArray dInput = Nd4j.zerosLike(paddedInput); // Gradient w.r.t input
+        INDArray dFilter = Nd4j.zerosLike(this.Weights); // Gradient w.r.t filter
+        INDArray dBias = dZ.sum(0, 1, 2); // Gradient w.r.t bias (sum over batch, height, and width)
+
+        // Backpropagation
+        for (int b = 0; b < batchSize; b++) {
+            for (int h = 0; h < dZHeight; h++) {
+                for (int w = 0; w < dZWidth; w++) {
+                    int hStart = h * (int) this.Strides;
+                    int hEnd = hStart + filterHeight;
+                    int wStart = w * (int) this.Strides;
+                    int wEnd = wStart + filterWidth;
+
+                    for (int c = 0; c < outChannels; c++) {
+                        // Slice input
+                        INDArray inputSlice = paddedInput.get(
+                                NDArrayIndex.point(b),
+                                NDArrayIndex.interval(hStart, hEnd),
+                                NDArrayIndex.interval(wStart, wEnd),
+                                NDArrayIndex.all()
+                        );
+
+                        // Gradient w.r.t. filter
+                        dFilter.get(NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.point(c))
+                                .addi(inputSlice.mul(dZ.getDouble(b, h, w, c)));
+
+                        // Gradient w.r.t. input
+                        dInput.get(
+                                NDArrayIndex.point(b),
+                                NDArrayIndex.interval(hStart, hEnd),
+                                NDArrayIndex.interval(wStart, wEnd),
+                                NDArrayIndex.all()
+                        ).addi(this.Weights.get(NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.all(), NDArrayIndex.point(c))
+                                .mul(dZ.getDouble(b, h, w, c)));
+                    }
+                }
+            }
+        }
+
+        // Update weights and biases
+        this.Weights.subi(dFilter.mul(this.Lrate)); // Subtract gradient scaled by learning rate
+        this.Bias.subi(dBias.mul(this.Lrate));     // Subtract gradient scaled by learning rate
+
+        // Remove padding from dInput
+        dInput = dInput.get(
+                NDArrayIndex.all(),
+                NDArrayIndex.interval((int) this.Padding, (int) this.Padding + inputHeight),
+                NDArrayIndex.interval((int) this.Padding, (int) this.Padding + inputWidth),
+                NDArrayIndex.all()
+        );
+
+        return dInput;
     }
+
+
 
     public INDArray getBias(){return this.Bias;}
     public INDArray getWeights(){return this.Weights;}

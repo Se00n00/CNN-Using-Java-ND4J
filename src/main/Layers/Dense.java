@@ -43,11 +43,11 @@ public class Dense extends Layers{
         // Return Activation
         switch (this.Activations){
             case "RELU" :{
-                return Nd4j.getExecutioner().exec(new RectifiedLinear(this.Z));
+                return ReluActivation.relu(this.Z);
             }
             case "SOFTMAX" :{
-                SoftMaxActivation S = new SoftMaxActivation();
-                return S.softmax(this.Z);
+                return this.Z;
+//                return SoftMaxActivation.softmax(this.Z);
             }
             default:{
                 System.out.println("[DENSE FORWARD PASS : INVALID ACTIVATION TYPO]");
@@ -63,8 +63,7 @@ public class Dense extends Layers{
         INDArray dZ = null;
         switch (this.Activations){
             case "RELU" :{
-                ReluActivation R = new ReluActivation();
-                dZ = dL.mul(R.D_relu(this.Z));
+                dZ = dL.mul(ReluActivation.D_relu(this.Z));
                 break;
             }
             case "SOFTMAX" :{
@@ -85,8 +84,8 @@ public class Dense extends Layers{
         INDArray dBiases = dZ.sum(0).div(this.TotalImages);
 
         // Update Weights and Biases
-        this.Weights = this.Weights.add(dWeights.mul(this.Lrate));
-        this.Bias = this.Bias.add(dBiases.mul(this.Lrate));
+        this.Weights = this.Weights.sub(dWeights.mul(this.Lrate));
+        this.Bias = this.Bias.sub(dBiases.mul(this.Lrate));
 
 //        System.out.println("[DENSE BACKPASS COMPLETE]");
         return dZ.mmul(getWeights().transpose());
