@@ -95,13 +95,26 @@ Follow these steps to set up and run the project:
   mvn exec:java -Dexec.mainClass="com.example.Main"
 
 ## **Project Structure**
- CNN-Using-Java-ND4J/ ├── src/ │ ├── main/ │ │ ├── java/ │ │ │ ├── com.example/ │ │ │ │ ├── Main.java # Entry point 
- of the application │ │ │ │ ├── CNNModel.java # CNN architecture and training logic │ │ │ │ ├── DataLoader.java # 
- Utility for loading and preprocessing data │ │ │ │ ├── Utils.java # Helper methods │ │ │ └── ... │ │ ├──  
- resources/ │ │ │ ├── dataset/ # Dataset folder │ │ │ ├── config.properties # Configuration file for 
- hyperparameters │ │ │ └── ... │ ├── test/ # Unit tests (if applicable) ├── output/ │ ├── models/ # Saved models 
- after training │ ├── logs/ # Training logs ├── pom.xml # Maven configuration file └── README.md # Project 
- documentation
+ CNN-Using-Java-ND4J/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── com.example/
+│   │   │   │   ├── Main.java        # Entry point of the application
+│   │   │   │   ├── CNNModel.java    # CNN architecture and training logic
+│   │   │   │   ├── DataLoader.java  # Utility for loading and preprocessing data
+│   │   │   │   ├── Utils.java       # Helper methods
+│   │   │   └── ...
+│   │   ├── resources/
+│   │   │   ├── dataset/             # Dataset folder
+│   │   │   ├── config.properties    # Configuration file for hyperparameters
+│   │   │   └── ...
+│   ├── test/                        # Unit tests (if applicable)
+├── output/
+│   ├── models/                      # Saved models after training
+│   ├── logs/                        # Training logs
+├── pom.xml                          # Maven configuration file
+└── README.md                        # Project documentation
 
 - **`src/main/java`**: Contains the Java source files, including:
   - `Main.java`: Entry point to initialize and train the CNN.
