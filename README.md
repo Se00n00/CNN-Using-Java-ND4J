@@ -70,3 +70,92 @@ Follow these steps to set up and run the project:
    ```bash
    git clone https://github.com/Se00n00/CNN-Using-Java-ND4J.git
    cd CNN-Using-Java-ND4J
+## **Usage**
+
+### **Step 1: Load and Preprocess the Data**
+- The dataset should be organized in the `resources/dataset` directory.  
+- Each class should have its own folder containing respective images.  
+- The `DataLoader` class is responsible for:
+  - Reading image files.
+  - Resizing them to a uniform dimension.
+  - Normalizing pixel values to improve training stability.
+
+### **Step 2: Define the CNN Architecture**
+- The CNN architecture is implemented in the `CNNModel.java` file.  
+- Modify the following parameters to customize the architecture:
+  - **Number of convolutional layers**: Add or remove layers as required.
+  - **Kernel size and stride**: Define kernel dimensions for each layer.
+  - **Activation functions**: Choose from functions like ReLU, sigmoid, or tanh.
+  - **Pooling layers**: Use max pooling or average pooling to reduce spatial dimensions.
+  - **Fully connected layers**: Configure the number of neurons in dense layers.
+
+### **Step 3: Train the Model**
+- Run the `Main.java` file to start the training process:
+  ```bash
+  mvn exec:java -Dexec.mainClass="com.example.Main"
+
+## **Project Structure**
+CNN-Using-Java-ND4J/ ├── src/ │ ├── main/ │ │ ├── java/ │ │ │ ├── com.example/ │ │ │ │ ├── Main.java # Entry point of the application │ │ │ │ ├── CNNModel.java # CNN architecture and training logic │ │ │ │ ├── DataLoader.java # Utility for loading and preprocessing data │ │ │ │ ├── Utils.java # Helper methods │ │ │ └── ... │ │ ├── resources/ │ │ │ ├── dataset/ # Dataset folder │ │ │ ├── config.properties # Configuration file for hyperparameters │ │ │ └── ... │ ├── test/ # Unit tests (if applicable) ├── output/ │ ├── models/ # Saved models after training │ ├── logs/ # Training logs ├── pom.xml # Maven configuration file └── README.md # Project documentation
+
+- **`src/main/java`**: Contains the Java source files, including:
+  - `Main.java`: Entry point to initialize and train the CNN.
+  - `CNNModel.java`: Core logic for defining and training the CNN architecture.
+  - `DataLoader.java`: Handles dataset loading and preprocessing.
+  - `Utils.java`: Provides utility functions for metrics and visualization.
+
+- **`resources/dataset`**: Placeholder for dataset files. Organize images in subdirectories by class.
+
+- **`output/models`**: Directory where trained models are saved.
+
+- **`output/logs`**: Contains training logs and metrics.
+
+- **`pom.xml`**: Maven configuration file to manage dependencies.
+
+---
+
+## **CNN Architecture**
+
+The Convolutional Neural Network implemented in this project consists of the following layers:
+
+1. **Input Layer**: Accepts images of a fixed size (e.g., 224x224 pixels).
+2. **Convolutional Layers**: Extracts spatial features from images using learnable filters.
+3. **Activation Functions**: Applies non-linearity to introduce learning capabilities (e.g., ReLU).
+4. **Pooling Layers**: Reduces spatial dimensions while retaining significant features.
+5. **Fully Connected Layers**: Maps extracted features to output classes.
+6. **Output Layer**: Produces probabilities for each class using softmax.
+
+### **Example Architecture**
+
+Modify the architecture in `CNNModel.java` to suit your dataset and requirements.
+
+---
+
+## **Results**
+
+The following results can be obtained after training and evaluation:
+
+1. **Model Accuracy**
+   - Training Accuracy: Percentage of correctly classified training samples.
+   - Test Accuracy: Percentage of correctly classified test samples.
+
+2. **Training Metrics**
+   - Loss values over epochs.
+   - Accuracy values over epochs.
+
+3. **Confusion Matrix**
+   - Displays true positives, false positives, true negatives, and false negatives for each class.
+
+4. **Visualizations**
+   - Loss curve: Displays the trend of training and validation loss over epochs.
+   - Accuracy curve: Displays the trend of training and validation accuracy over epochs.
+
+---
+
+## **Contributing**
+
+Contributions are welcome! If you'd like to contribute to this project, follow these steps:
+
+1. **Fork the Repository**: Click on the "Fork" button at the top right of this page.
+2. **Clone Your Fork**:
+   ```bash
+   git clone https://github.com/your-username/CNN-Using-Java-ND4J.git
