@@ -13,11 +13,8 @@ Welcome to the **CNN Using Java with ND4J** repository! This project demonstrate
 5. [Usage](#usage)  
 6. [Project Structure](#project-structure)  
 7. [CNN Architecture](#cnn-architecture)  
-8. [Dataset](#dataset)  
-9. [Results](#results)  
-10. [Contributing](#contributing)  
-11. [License](#license)  
-12. [Acknowledgments](#acknowledgments)  
+8. [Dataset](#dataset) 
+9. [Contributing](#contributing)  
 
 ---
 
@@ -39,7 +36,6 @@ This project is a great resource for Java developers interested in machine learn
 - **Flexible Architecture**: Modify layers, activation functions, and optimizers.
 - **Dataset Preprocessing**: Load and normalize image data.
 - **Training & Evaluation**: Train the CNN on a sample dataset and evaluate its accuracy.
-- **Visualizations**: Graphical representation of training metrics like loss and accuracy.
 
 ---
 
@@ -47,8 +43,7 @@ This project is a great resource for Java developers interested in machine learn
 
 - **Java**: Core programming language.
 - **ND4J**: Numerical computation library for deep learning in Java.
-- **DL4J (Optional)**: DeepLearning4J for higher-level abstractions if extended.
-- **Maven/Gradle**: Build automation tools.
+- **Maven**: Build automation tools.
 
 ---
 
@@ -72,27 +67,20 @@ Follow these steps to set up and run the project:
    cd CNN-Using-Java-ND4J
 ## **Usage**
 
-### **Step 1: Load and Preprocess the Data**
-- The dataset should be organized in the `resources/dataset` directory.  
-- Each class should have its own folder containing respective images.  
-- The `DataLoader` class is responsible for:
-  - Reading image files.
-  - Resizing them to a uniform dimension.
-  - Normalizing pixel values to improve training stability.
+### **Step 1: Get all the dependecies**
+- Reload the pom.xml to resolve all the required dependencies
+- In case of `artifact nor found error`, visit maven repository to get the info of correct version
 
-### **Step 2: Define the CNN Architecture**
-- The CNN architecture is implemented in the `CNNModel.java` file.  
-- Modify the following parameters to customize the architecture:
-  - **Number of convolutional layers**: Add or remove layers as required.
-  - **Kernel size and stride**: Define kernel dimensions for each layer.
-  - **Activation functions**: Choose from functions like ReLU, sigmoid, or tanh.
-  - **Pooling layers**: Use max pooling or average pooling to reduce spatial dimensions.
-  - **Fully connected layers**: Configure the number of neurons in dense layers.
+### **Step 2: Clear Resources and Mention your Dataset Directory**
+- If You wish to work on your own dataset, clear the resources first (any thing iniside it)
+- Inside `Main.java` change the already mention path of your dataset to your dataset in local
 
 ### **Step 3: Train the Model**
 - Run the `Main.java` file to start the training process:
   ```bash
   mvn exec:java -Dexec.mainClass="com.example.Main"
+- It will first check if the preprocessed data exists in resources or not if not, then would prepare the dataset
+- Then the actual training of model would start
 
 ## **Project Structure**
 
@@ -108,21 +96,16 @@ Follow these steps to set up and run the project:
  │   │   │   │   ├── Utils.java       # Helper methods
  │   │   │   └── ...
  │   │   ├── resources/
- │   │   │   ├── dataset/             # Dataset folder
- │   │   │   ├── config.properties    # Configuration file for hyperparameters
- │   │   │   └── ...
- │   ├── test/                        # Unit tests (if applicable)
- ├── output/
- │   ├── models/                      # Saved models after training
- │   ├── logs/                        # Training logs
+ │   │   │   ├── test/
+ │   │   │   └── test/
+ │   ├── test/
+ |
  ├── pom.xml                          # Maven configuration file
  └── README.md                        # Project documentation
 ```
-- **`src/main/java`**: Contains the Java source files, including:
+- **`src/main/MAIN`**: Contains the Java source files, including:
   - `Main.java`: Entry point to initialize and train the CNN.
-  - `CNNModel.java`: Core logic for defining and training the CNN architecture.
-  - `DataLoader.java`: Handles dataset loading and preprocessing.
-  - `Utils.java`: Provides utility functions for metrics and visualization.
+  - `Main.java`: Core logic for defining and training the CNN architecture.
 
 - **`resources/dataset`**: Placeholder for dataset files. Organize images in subdirectories by class.
 
@@ -147,28 +130,7 @@ The Convolutional Neural Network implemented in this project consists of the fol
 
 ### **Example Architecture**
 
-Modify the architecture in `CNNModel.java` to suit your dataset and requirements.
-
----
-
-## **Results**
-
-The following results can be obtained after training and evaluation:
-
-1. **Model Accuracy**
-   - Training Accuracy: Percentage of correctly classified training samples.
-   - Test Accuracy: Percentage of correctly classified test samples.
-
-2. **Training Metrics**
-   - Loss values over epochs.
-   - Accuracy values over epochs.
-
-3. **Confusion Matrix**
-   - Displays true positives, false positives, true negatives, and false negatives for each class.
-
-4. **Visualizations**
-   - Loss curve: Displays the trend of training and validation loss over epochs.
-   - Accuracy curve: Displays the trend of training and validation accuracy over epochs.
+Modify the architecture in `Main.java` to suit your dataset and requirements.
 
 ---
 
@@ -179,4 +141,4 @@ Contributions are welcome! If you'd like to contribute to this project, follow t
 1. **Fork the Repository**: Click on the "Fork" button at the top right of this page.
 2. **Clone Your Fork**:
    ```bash
-   git clone https://github.com/your-username/CNN-Using-Java-ND4J.git
+   git clone https://github.com/Se00n00/CNN-Using-Java-ND4J.git
