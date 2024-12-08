@@ -14,10 +14,18 @@ public class Conv2D extends Layers{
     long Padding;
     long Strides;
     int Neurons;
+    private INDArray Output;
 
-    Conv2D(int Neurons,long[] ConvolutionShape,double Lrate,long Padding,long Strides){
+    /**
+     * Initializes the Convolutional Layer
+     * @param Neurons : Number Of Filters
+     * @param ConvolutionShape : Filter-Shape > ConvolutionShape X ConvolutionShape
+     * @param Padding : Padding To Input Image
+     * @param Strides : Jumps
+     */
+    Conv2D(int Neurons,long ConvolutionShape,long Padding,long Strides){
         this.Neurons = Neurons;
-        this.ConvolutionShape = ConvolutionShape.clone();
+        this.ConvolutionShape = new long[]{ConvolutionShape,ConvolutionShape};
         this.Lrate = Lrate;
         this.Padding = Padding;
         this.Strides = Strides;
@@ -37,7 +45,7 @@ public class Conv2D extends Layers{
         if(this.Weights == null){
 
             // He Initiallization
-            double stddev = Math.sqrt(2.0 / (this.WeightsShape[0] * this.WeightsShape[1] * this.WeightsShape[2]));
+            double stddev = Math.sqrt(2.0 / (InputShape[3]));
             this.Weights = Nd4j.randn(this.WeightsShape).mul(stddev); // He Initialization
 
             // Xavier Initiallization
@@ -103,10 +111,11 @@ public class Conv2D extends Layers{
         }
 
         // Apply Relu & Return Convolution Output
-        return ReluActivation.relu(Output);
+        this.Output = ReluActivation.relu(Output);
+        return this.Output;
     }
 
-    INDArray backward(INDArray Input, INDArray dZ) {
+    INDArray backward(INDArray dZ, INDArray Input) {
         System.out.println("[CONVOLUTIONAL BACKWARD PASS]" + Arrays.toString(dZ.shape()));
 
         long[] inputShape = Input.shape();
@@ -189,4 +198,7 @@ public class Conv2D extends Layers{
 
     public INDArray getBias(){return this.Bias;}
     public INDArray getWeights(){return this.Weights;}
+
+    @Override
+    public INDArray getOutput() {return Output;}
 }

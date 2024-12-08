@@ -11,9 +11,13 @@ public class AvgPool2D extends Layers{
     int Strides;
     INDArray Output;
 
-    AvgPool2D(long []Shape,double Lrate,int Strides){
-        this.WindowShape = Shape.clone();
-        this.Lrate = Lrate;
+    /**
+     * Initialize Maximum Pooling Layer
+     * @param WindowShape : Window-Shape > WindowShape X WindowShape
+     * @param Strides : Jumps
+     */
+    AvgPool2D(long WindowShape, int Strides){
+        this.WindowShape = new long[]{WindowShape, WindowShape};
         this.Strides = Strides;
     }
 
@@ -52,10 +56,10 @@ public class AvgPool2D extends Layers{
         return Output;
     }
 
+//    TODO: "The Below is not an average pooling layer's backward implementations" > Implement Average Pooling layer
     INDArray backward(INDArray Input, INDArray dZ) {
         System.out.println("[AVERAGE POOLING BACKWARD PASS]"+Arrays.toString(Input.shape()));
 
-//        TODO : Implement Average Pooling layer
         long[] inputShape = Input.shape();
         INDArray dP = Nd4j.zeros(inputShape);
         for (int b = 0; b < inputShape[0]; b++) {

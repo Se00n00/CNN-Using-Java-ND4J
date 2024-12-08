@@ -1,6 +1,6 @@
-# **CNN Using Java with ND4J**
+# **NeuralNetwork Using Java with ND4J**
 
-Welcome to the **CNN Using Java with ND4J** repository! This project demonstrates how to implement a Convolutional Neural Network (CNN) in Java using the ND4J (Numerical Computing for Java) library. ND4J provides high-performance tensor computation, making it a powerful choice for machine learning and deep learning tasks in Java.
+Welcome to the **NeuralNetwork Using Java with ND4J** repository! This project demonstrates how to implement a Convolutional Neural Network (NeuralNetwork) in Java using the ND4J (Numerical Computing for Java) library. ND4J provides high-performance tensor computation, making it a powerful choice for machine learning and deep learning tasks in Java.
 
 ---
 
@@ -12,7 +12,7 @@ Welcome to the **CNN Using Java with ND4J** repository! This project demonstrate
 4. [Setup Instructions](#setup-instructions)  
 5. [Usage](#usage)  
 6. [Project Structure](#project-structure)  
-7. [CNN Architecture](#cnn-architecture)  
+7. [NeuralNetwork Architecture](#cnn-architecture)  
 8. [Dataset](#dataset) 
 9. [Contributing](#contributing)  
 
@@ -20,10 +20,10 @@ Welcome to the **CNN Using Java with ND4J** repository! This project demonstrate
 
 ## **Overview**
 
-This project is a hands-on implementation of a Convolutional Neural Network (CNN) in Java using ND4J. CNNs are powerful neural networks widely used in computer vision tasks such as image classification, object detection, and segmentation. The repository demonstrates:
+This project is a hands-on implementation of a Convolutional Neural Network (NeuralNetwork) in Java using ND4J. CNNs are powerful neural networks widely used in computer vision tasks such as image classification, object detection, and segmentation. The repository demonstrates:
 
 - Preprocessing data for training CNNs.
-- Defining and training a CNN using ND4J.
+- Defining and training a NeuralNetwork using ND4J.
 - Evaluating model performance on a test dataset.
 
 This project is a great resource for Java developers interested in machine learning and deep learning.
@@ -32,10 +32,10 @@ This project is a great resource for Java developers interested in machine learn
 
 ## **Features**
 
-- **Custom CNN Implementation**: Build a CNN model step by step in Java.
+- **Custom NeuralNetwork Implementation**: Build a NeuralNetwork model step by step in Java.
 - **Flexible Architecture**: Modify layers, activation functions, and optimizers.
 - **Dataset Preprocessing**: Load and normalize image data.
-- **Training & Evaluation**: Train the CNN on a sample dataset and evaluate its accuracy.
+- **Training & Evaluation**: Train the NeuralNetwork on a sample dataset and evaluate its accuracy.
 
 ---
 
@@ -63,8 +63,8 @@ Follow these steps to set up and run the project:
 
 3. **Clone the Repository**  
    ```bash
-   git clone https://github.com/Se00n00/CNN-Using-Java-ND4J.git
-   cd CNN-Using-Java-ND4J
+   git clone https://github.com/Se00n00/NeuralNetwork-Using-Java-ND4J.git
+   cd NeuralNetwork-Using-Java-ND4J
 ## **Usage**
 
 ### **Step 1: Get all the dependecies**
@@ -85,13 +85,13 @@ Follow these steps to set up and run the project:
 ## **Project Structure**
 
  ```CSS
- CNN-Using-Java-ND4J/
+ NeuralNetwork-Using-Java-ND4J/
  ├── src/
  │   ├── main/
  │   │   ├── java/
  │   │   │   ├── com.example/
  │   │   │   │   ├── Main.java        # Entry point of the application
- │   │   │   │   ├── CNNModel.java    # CNN architecture and training logic
+ │   │   │   │   ├── CNNModel.java    # NeuralNetwork architecture and training logic
  │   │   │   │   ├── DataLoader.java  # Utility for loading and preprocessing data
  │   │   │   │   ├── Utils.java       # Helper methods
  │   │   │   └── ...
@@ -104,8 +104,8 @@ Follow these steps to set up and run the project:
  └── README.md                        # Project documentation
 ```
 - **`src/main/MAIN`**: Contains the Java source files, including:
-  - `Main.java`: Entry point to initialize and train the CNN.
-  - `Main.java`: Core logic for defining and training the CNN architecture.
+  - `Main.java`: Entry point to initialize and train the NeuralNetwork.
+  - `Main.java`: Core logic for defining and training the NeuralNetwork architecture.
 
 - **`resources/dataset`**: Placeholder for dataset files. Organize images in subdirectories by class.
 
@@ -117,7 +117,7 @@ Follow these steps to set up and run the project:
 
 ---
 
-## **CNN Architecture**
+## **NeuralNetwork Architecture**
 
 The Convolutional Neural Network implemented in this project consists of the following layers:
 
@@ -141,4 +141,4 @@ Contributions are welcome! If you'd like to contribute to this project, follow t
 1. **Fork the Repository**: Click on the "Fork" button at the top right of this page.
 2. **Clone Your Fork**:
    ```bash
-   git clone https://github.com/Se00n00/CNN-Using-Java-ND4J.git
+   git clone https://github.com/Se00n00/NeuralNetwork-Using-Java-ND4J.git

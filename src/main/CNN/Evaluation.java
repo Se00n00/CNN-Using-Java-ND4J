@@ -1,22 +1,22 @@
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 public class Evaluation {
-    public static Double Accuracy(INDArray ExpectedOutput, INDArray TrueOutput){
+    public static Double Accuracy(INDArray PredictedOutput, INDArray TrueOutput){
         TrueOutput = TrueOutput.castTo(DataType.FLOAT);
-        if (!ExpectedOutput.shapeInfoToString().equals(TrueOutput.shapeInfoToString())) {
+        if (!PredictedOutput.shapeInfoToString().equals(TrueOutput.shapeInfoToString())) {
             throw new IllegalArgumentException("ExpectedOutput and TrueOutput must have the same shape.");
         }
 
-        // Element-wise comparison
-        INDArray matches = ExpectedOutput.eq(TrueOutput);
+        // Index of Maximum Argument For Predicted-Output and True-Output
+        INDArray predictedClasses = Nd4j.argMax(PredictedOutput,1);
+        INDArray trueClasses = Nd4j.argMax(TrueOutput,1);
 
-        // Sum up the correct matches
+        INDArray matches = predictedClasses.eq(trueClasses);
         double correct = matches.castTo(DataType.FLOAT).sumNumber().doubleValue();
+        double total = predictedClasses.length();
 
-        // Total number of elements
-        double total = ExpectedOutput.length();
-
-        return correct / total;
+        return correct / total * 100.00;
     }
 }

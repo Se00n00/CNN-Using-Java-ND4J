@@ -11,9 +11,8 @@ public class Test {
                 {1.0, 2.0, 0.1},
                 {-0.1, -0.2, 2.0}
         });
-        SoftmaxCrossEntropyLoss s = new SoftmaxCrossEntropyLoss();
 
-        System.out.println(Transforms.softmax(a,true));
-        System.out.println(Transforms.softmax(a,false));
+        System.out.println(ReluActivation.relu(a));
+        System.out.println(ReluActivation.D_relu(a));
     }
 }

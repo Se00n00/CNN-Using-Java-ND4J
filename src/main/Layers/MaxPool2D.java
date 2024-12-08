@@ -11,9 +11,13 @@ public class MaxPool2D extends Layers{
     int Strides;
     INDArray Output;
 
-    MaxPool2D(long[] Shape, double Lrate, int Strides){
-        this.WindowShape = Shape.clone();
-        this.Lrate = Lrate;
+    /**
+     * Initialize Maximum Pooling Layer
+     * @param WindowShape : Window-Shape > WindowShape X WindowShape
+     * @param Strides : Jumps
+     */
+    MaxPool2D(long WindowShape, int Strides){
+        this.WindowShape = new long[]{WindowShape,WindowShape};
         this.Strides = Strides;
     }
 

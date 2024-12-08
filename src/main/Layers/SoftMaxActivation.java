@@ -6,12 +6,11 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
 public class SoftMaxActivation {
-//    ActivationSoftmax
     public static INDArray softmax(INDArray input) {
-        return Transforms.softmax(input,true);
+        return Nd4j.nn.softmax(input);
+    }
+    public static INDArray D_softmax(INDArray softmaxOutput) {
+        return softmaxOutput.mul(softmaxOutput.rsub(1));
     }
 
-    public static INDArray d_softmax(INDArray softmaxOutput) {
-        return Transforms.softmax(softmaxOutput,false);
-    }
 }

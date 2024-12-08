@@ -14,40 +14,44 @@ public class Dense extends Layers{
     long []WeightShape;
     INDArray Z;
     String Activations;
+    private INDArray OutputActivations;
 
-    Dense(int Neurons, double Lrate, String Activations){
+    Dense(int Neurons, String Activations){
         this.Neurons = Neurons;
-        this.Lrate = Lrate;
         this.Activations = Activations;
     }
 
+    /**
+     * @param Input : Input Data in form of [Batches, Data]
+     * @return Activations for Next Layer
+     */
     @Override
     INDArray forward(INDArray Input){
+        System.out.println("[DENSE FORWARD PASS]"+Arrays.toString(Input.shape()));
         long[] InputShape = Arrays.stream(Input.shape()).toArray();
 
         // Initialize Parameters
-//        TODO :: [1,Neurons] || [Neurons]
         this.TotalImages = InputShape[0];
         if(this.Bias == null)
             this.Bias = Nd4j.rand(1,this.Neurons);
         if(this.WeightShape == null)
             this.WeightShape = new long[]{InputShape[1], (long) this.Neurons};
         if(this.Weights == null){
-            double limit = Math.sqrt(6.0/Input.size(1) + this.Neurons);
-            this.Weights = Nd4j.rand(this.WeightShape).muli(2*limit).subi(limit);
+            double limit = Math.sqrt(6.0/(Input.size(1) + this.Neurons));
+            this.Weights = Nd4j.rand(this.WeightShape).muli(limit).subi(limit);      //Xavier Initialization
         }
 
-        System.out.println("[DENSE FORWARD PASS]"+Arrays.toString(Input.shape()));
         this.Z = Input.mmul(this.Weights).add(this.Bias);
 
         // Return Activation
         switch (this.Activations){
             case "RELU" :{
-                return ReluActivation.relu(this.Z);
+                this.OutputActivations = ReluActivation.relu(this.Z);
+                return OutputActivations;
             }
             case "SOFTMAX" :{
-                return this.Z;
-//                return SoftMaxActivation.softmax(this.Z);
+                this.OutputActivations =  SoftMaxActivation.softmax(this.Z);
+                return OutputActivations;
             }
             default:{
                 System.out.println("[DENSE FORWARD PASS : INVALID ACTIVATION TYPO]");
@@ -56,9 +60,13 @@ public class Dense extends Layers{
         }
     }
 
+    /**
+     * @param dL : Loss for current Layer
+     * @param InputActivations : Step-Back Layer Activations
+     * @return dZ : Return Loss for Step-Back Layer
+     */
     INDArray backward(INDArray dL, INDArray InputActivations){
         System.out.println("[DENSE BACKWARD PASS]"+Arrays.toString(dL.shape()));
-        ReluActivation rectifiedLU = new ReluActivation();
 
         INDArray dZ = null;
         switch (this.Activations){
@@ -67,8 +75,7 @@ public class Dense extends Layers{
                 break;
             }
             case "SOFTMAX" :{
-                SoftMaxActivation S = new SoftMaxActivation();
-                dZ = dL.mul(S.d_softmax(this.Z));
+                dZ = dL;
                 break;
             }
             default:{
@@ -76,8 +83,6 @@ public class Dense extends Layers{
                 break;
             }
         }
-//        INDArray dZ = dL.mul();
-//        INDArray dZ = dL.mmul(Weights.transpose()).mul(rectifiedLU.D_relu(this.Z));
 
         // Calculate Gradient for Weight and Bias
         INDArray dWeights = InputActivations.transpose().mmul(dZ).div(this.TotalImages);
@@ -87,9 +92,9 @@ public class Dense extends Layers{
         this.Weights = this.Weights.sub(dWeights.mul(this.Lrate));
         this.Bias = this.Bias.sub(dBiases.mul(this.Lrate));
 
-//        System.out.println("[DENSE BACKPASS COMPLETE]");
         return dZ.mmul(getWeights().transpose());
     }
     public INDArray getWeights(){return this.Weights;}
+    public INDArray getOutput(){return this.OutputActivations;}
 
 }
