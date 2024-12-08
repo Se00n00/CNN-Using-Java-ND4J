@@ -93,7 +93,7 @@ Follow these steps to set up and run the project:
   NN.add(new Dense(512, "RELU"));      // (Number of Neurons, Activation Function
   NN.add(new Dense(10, "SOFTMAX"));
   ```
-### ** Example Architecture Definition :  METHOD : 2**
+### **Example Architecture Definition :  METHOD : 2**
 ```java
 NeuralNetwork NN = new NeuralNetwork(new ArrayList<>(Arrays.asList(
                 new Conv2D(10,7,0,4),
@@ -104,7 +104,7 @@ NeuralNetwork NN = new NeuralNetwork(new ArrayList<>(Arrays.asList(
                 new Dense(10,"SOFTMAX")
  )));
 ```
-### ** Training And Evaluation**
+### **Training And Evaluation**
 ```java
 // Train the Model
 NN.fit(Train_X, Train_Y, 0.001,10);    // (Training_X, Training_Y, Learning Rate, Epoch)
