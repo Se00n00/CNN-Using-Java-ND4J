@@ -54,7 +54,10 @@ public class Main {
         }
         System.out.println();
 
-        BATCH_SIZE = (int) 32/LABELS.length;
+//        TODO :: CHANGE THE BACTH SIZE
+        int batch_size = 32;
+
+        BATCH_SIZE = batch_size/LABELS.length;
 
         // Create Train_X and Train_Y
         INDArray Train_X = null;
