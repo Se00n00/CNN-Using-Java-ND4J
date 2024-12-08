@@ -109,32 +109,27 @@ public class Main {
 
 //        TODO :: CHANGE THE ARCHITECTURE AS PER REQUIRED
         // METHOD 1 :: DEFINE THE MODEL
-        NeuralNetwork NN1 = new NeuralNetwork();
-        NN1.add(new Conv2D(10,7,0,4));
-        NN1.add(new MaxPool2D(2,1));
-        NN1.add(new Flatten());
-        NN1.add(new Dense(128, "RELU"));
-        NN1.add(new Dense(10,"SOFTMAX"));
-
-        // METHOD 1 :: TRAIN THE MODEL
-        NN1.fit(Train_X,Train_Y,0.001,10);
-
-        // METHOD 1 :: EVALUATE THE MODEL
-        System.out.println("Final Accuracy :: "+NN1.Accuracy(Test_X, Test_Y)+"100%");
+        NeuralNetwork NN = new NeuralNetwork();
+        NN.add(new Conv2D(10,7,0,4));
+        NN.add(new MaxPool2D(2,1));
+        NN.add(new Flatten());
+        NN.add(new Dense(128, "RELU"));
+        NN.add(new Dense(10,"SOFTMAX"));
 
         // METHOD 2 :: DEFINE THE MODEL
-        NeuralNetwork NN2 = new NeuralNetwork(new ArrayList<>(Arrays.asList(
-                new Conv2D(10,7,0,4),
-                new MaxPool2D(2,1),
-                new Dense(128, "RELU"),
-                new Dense(10,"SOFTMAX")
-        )));
+//        NeuralNetwork NN = new NeuralNetwork(new ArrayList<>(Arrays.asList(
+//                new Conv2D(10,7,0,4),
+//                new MaxPool2D(2,1),
+//                new Flatten(),
+//                new Dense(128, "RELU"),
+//                new Dense(10,"SOFTMAX")
+//        )));
 
-        // METHOD 1 :: TRAIN THE MODEL
-        NN1.fit(Train_X,Train_Y,0.001,10);
+        // TRAIN THE MODEL
+        NN.fit(Train_X,Train_Y,0.001,10);
 
-        // METHOD 1 :: EVALUATE THE MODEL
-        System.out.println("Final Accuracy :: "+NN1.Accuracy(Test_X, Test_Y)+"100%");
+        // EVALUATE THE MODEL
+        System.out.println("Final Accuracy :: "+NN.Accuracy(Test_X, Test_Y)+"%");
     }
 
     public static void Intital_Dataset_Creation() throws IOException {
