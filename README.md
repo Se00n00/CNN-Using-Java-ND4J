@@ -11,10 +11,9 @@ Welcome to the **NeuralNetwork Using Java with ND4J** repository! This project d
 3. [Technologies Used](#technologies-used)  
 4. [Setup Instructions](#setup-instructions)  
 5. [Usage](#usage)  
-6. [Project Structure](#project-structure)  
-7. [NeuralNetwork Architecture](#cnn-architecture)  
-8. [Dataset](#dataset) 
-9. [Contributing](#contributing)  
+6. [NeuralNetwork Architecture](#cnn-architecture)  
+7. [Dataset](#dataset) 
+8. [Contributing](#contributing)  
 
 ---
 
@@ -82,55 +81,38 @@ Follow these steps to set up and run the project:
 - It will first check if the preprocessed data exists in resources or not if not, then would prepare the dataset
 - Then the actual training of model would start
 
-## **Project Structure**
-
- ```CSS
- NeuralNetwork-Using-Java-ND4J/
- ├── src/
- │   ├── main/
- │   │   ├── java/
- │   │   │   ├── com.example/
- │   │   │   │   ├── Main.java        # Entry point of the application
- │   │   │   │   ├── CNNModel.java    # NeuralNetwork architecture and training logic
- │   │   │   │   ├── DataLoader.java  # Utility for loading and preprocessing data
- │   │   │   │   ├── Utils.java       # Helper methods
- │   │   │   └── ...
- │   │   ├── resources/
- │   │   │   ├── test/
- │   │   │   └── test/
- │   ├── test/
- |
- ├── pom.xml                          # Maven configuration file
- └── README.md                        # Project documentation
-```
-- **`src/main/MAIN`**: Contains the Java source files, including:
-  - `Main.java`: Entry point to initialize and train the NeuralNetwork.
-  - `Main.java`: Core logic for defining and training the NeuralNetwork architecture.
-
-- **`resources/dataset`**: Placeholder for dataset files. Organize images in subdirectories by class.
-
-- **`output/models`**: Directory where trained models are saved.
-
-- **`output/logs`**: Contains training logs and metrics.
-
-- **`pom.xml`**: Maven configuration file to manage dependencies.
-
----
-
 ## **NeuralNetwork Architecture**
 
-The Convolutional Neural Network implemented in this project consists of the following layers:
+### **Example Architecture Definition : METHOD : 1**
+  ```java
+  NeuralNetwork NN = new NeuralNetwork()
+  // Add Layer To It
+  NN.add(new Conv2D(10,7,0,4)0;        // (Number of Filters, FIlter Shape, Padding, Strides )
+  NN.add(new MaxPool2D(2,1));          // (Window Shape, Strides)
+  NN.add(new Flatten());               // Flatten Defore Dense Layer
+  NN.add(new Dense(512, "RELU"));      // (Number of Neurons, Activation Function
+  NN.add(new Dense(10, "SOFTMAX"));
+  ```
+### ** Example Architecture Definition :  METHOD : 2**
+```java
+NeuralNetwork NN = new NeuralNetwork(new ArrayList<>(Arrays.asList(
+                new Conv2D(10,7,0,4),
+                new MaxPool2D(2,1),
+                new Flatten(),
+                new Dense(512, "RELU"),
+                new Dense(64, "RELU"),
+                new Dense(10,"SOFTMAX")
+ )));
+```
+### ** Training And Evaluation**
+```java
+// Train the Model
+NN.fit(Train_X, Train_Y, 0.001,10);    // (Training_X, Training_Y, Learning Rate, Epoch)
 
-1. **Input Layer**: Accepts images of a fixed size (e.g., 224x224 pixels).
-2. **Convolutional Layers**: Extracts spatial features from images using learnable filters.
-3. **Activation Functions**: Applies non-linearity to introduce learning capabilities (e.g., ReLU).
-4. **Pooling Layers**: Reduces spatial dimensions while retaining significant features.
-5. **Fully Connected Layers**: Maps extracted features to output classes.
-6. **Output Layer**: Produces probabilities for each class using softmax.
-
-### **Example Architecture**
-
-Modify the architecture in `Main.java` to suit your dataset and requirements.
+// Evalute the Model
+System.out.println("Final Accuracy :: "+NN.Accuracy(Test_X, Test_Y)+"%");
+```
+Modify the architecture in `Main.java` to suit your requirements Using any Method.
 
 ---
 
